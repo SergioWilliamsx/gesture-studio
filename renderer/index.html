@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gesture Studio</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Gesture Studio</h1>
+          <p class="sub">
+            Capture gestos com a mão e associe a ações (volume, space, etc.).<br/>
+            Os gestos ficam salvos localmente. Faça o gesto sempre com ângulo parecido.
+          </p>
+        </div>
+        <div class="badge">
+          <span id="dot" class="dot"></span>
+          <span id="camState">Câmera desligada</span>
+        </div>
+      </header>
+
+      <div class="grid">
+        <!-- Viewer -->
+        <div class="card">
+          <div class="cardHead">
+            <div class="title">Câmera</div>
+            <div class="badge">MediaPipe Hands • 1 mão</div>
+          </div>
+
+          <div class="viewer">
+            <div>
+             // <video id="video" autoplay playsinline muted></video>
+              <canvas id="canvas"></canvas>
+            </div>
+
+            <div class="controls">
+              <div class="leftControls">
+                <button id="btnStart" class="primary">Iniciar</button>
+                <button id="btnStop">Parar</button>
+              </div>
+              <div class="rightControls">
+                <span>FPS: <b id="fps">0</b></span>
+                <span>•</span>
+                <span>Mão: <b id="handSeen">não</b></span>
+              </div>
+            </div>
+
+            <div class="toast" id="status">Parado.</div>
+          </div>
+        </div>
+
+        <!-- Gestures -->
+        <div class="card">
+          <div class="cardHead">
+            <div class="title">Gestos cadastrados</div>
+            <div class="badge">Template matching</div>
+          </div>
+
+          <div class="panel">
+            <div class="kpis">
+              <div class="kpi">
+                <div class="label">Dedos (estimativa)</div>
+                <div class="value"><span id="count">0</span></div>
+              </div>
+              <div class="kpi">
+                <div class="label">Gestos salvos</div>
+                <div class="value"><span id="savedCount">0</span></div>
+              </div>
+            </div>
+
+            <p class="hint">
+              1) Faça um gesto • 2) Dê um nome • 3) Escolha a ação • 4) Capturar.<br/>
+              Quando o gesto bater, o app executa a ação via AutoHotkey.
+            </p>
+
+            <div class="formRow">
+              <input id="gestureName" placeholder="Nome do gesto (ex: ok, paz, joinha)" />
+              <select id="gestureAction"></select>
+              <button id="btnCapture" class="primary">Capturar</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="small">
+              Sensibilidade (threshold): <b id="thrLabel">0.080</b> •
+              Cooldown por gesto: <b id="coolLabel">1200ms</b>
+              <br/>Se estiver difícil reconhecer, aumente. Se confundir, diminua.
+            </div>
+
+            <div class="formRow">
+              <input id="threshold" type="range" min="0.040" max="0.140" step="0.002" value="0.080"/>
+              <button id="btnClearAll" class="danger">Apagar tudo</button>
+            </div>
+
+            <div class="list" id="gestureList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MediaPipe via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

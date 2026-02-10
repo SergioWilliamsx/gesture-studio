@@ -1,0 +1,42 @@
+{
+  "name": "play-pause",
+  "version": "1.0.0",
+  "description": "Gesture Studio: cadastre gestos com a mão e dispare ações (volume, space, play/pause) via AutoHotkey.",
+  "license": "MIT",
+  "author": "Sérgio Williams",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "dev": "electron .",
+    "build": "electron-builder --win"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "electron": "^40.2.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.sergio.playpause",
+    "productName": "PlayPause",
+    "files": [
+      "**/*"
+    ],
+    "extraResources": [
+      { "from": "actions.ahk", "to": "actions.ahk" },
+      { "from": "vendor/ahk/AutoHotkey.exe", "to": "ahk/AutoHotkey.exe" }
+    ],
+    "win": {
+      "icon": "icon.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PlayPause"
+    }
+  }
+}
