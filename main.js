@@ -99,12 +99,24 @@ function createTray() {
    Window
 ========================= */
 function createWindow() {
+  Menu.setApplicationMenu(null);
+
   win = new BrowserWindow({
     width: 980,
     height: 720,
     autoHideMenuBar: true,
     icon: ICON_PATH,
     show: true,
+    backgroundColor: "#0f1115",
+
+    // barra custom
+    titleBarStyle: "hidden",
+    titleBarOverlay: {
+      color: "#0f1115",       // cor da barra
+      symbolColor: "#cfd6e4", // cor dos ícones (min/max/close)
+      height: 34,             // altura (parecida com seu print)
+    },
+
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -116,7 +128,6 @@ function createWindow() {
   win.setMenuBarVisibility(false);
   win.loadFile(path.join(__dirname, "renderer", "index.html"));
 
-  // Fechar = esconder na bandeja
   win.on("close", (e) => {
     if (!app.isQuiting) {
       e.preventDefault();
@@ -124,7 +135,6 @@ function createWindow() {
     }
   });
 
-  // Minimizar = esconder
   win.on("minimize", (e) => {
     e.preventDefault();
     win.hide();

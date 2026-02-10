@@ -164,3 +164,11 @@
         background: rgba(239,68,68,.08);
         color: rgba(239,68,68,.95);
       }
+.topbar{
+  height:34px;
+  -webkit-app-region: drag;
+  background: #0f1115;
+}
+button, a, input{
+  -webkit-app-region: no-drag;
+}
