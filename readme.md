@@ -1,4 +1,4 @@
-# 🎛️ Gesture Studio (PlayPause)
+# 🎛️ Gesture Studio 
 
 Controle o computador usando **gestos com a mão**, via **webcam + MediaPipe**, com ações executadas pelo **AutoHotkey** (volume, play/pause, space, etc.).
 
@@ -62,3 +62,32 @@ play-pause/
 ├─ icon.ico
 ├─ package.json
 └─ README.md
+
+```
+
+---
+
+## Atalhos personalizados (novo)
+
+- Cadastro acessivel de novo atalho com gravacao de teclas (ex.: `Alt+Tab`)
+- Montagem por partes com input + botao `+` para criar sequencias (ex.: `CTRL+K+J`)
+- Aceita tecla simples sem modificador (ex.: `K`)
+- Catalogo reutilizavel de atalhos para vincular em varios gestos
+- Gerenciamento em Configuracoes para listar, editar e apagar atalhos salvos
+- Cada atalho salvo tem modo de disparo: `once` ou `repeat` (repete enquanto gesto ativo)
+- Atalho customizado salvo no `localStorage` junto do estado da aplicacao
+
+## Formato de acao no IPC
+
+- Legado (mantido): `window.api.runAction("vol_down")`
+- Novo formato:
+  - `window.api.runAction({ kind: "builtin", action: "vol_down" })`
+  - `window.api.runAction({ kind: "hotkey", combo: "ALT+TAB" })`
+
+## Limitacoes de seguranca para hotkeys
+
+- Permitido: tecla simples (ex.: `K`) ou modificadores `CTRL`/`ALT`/`SHIFT`/`WIN` + sequencia de teclas
+- Permitido: teclas de midia (`VOLUME_UP`, `VOLUME_DOWN`, `VOLUME_MUTE`, `MEDIA_PLAY_PAUSE`, `MEDIA_NEXT`, `MEDIA_PREV`)
+- Teclas de midia: apenas item unico (sem modificador e sem sequencia)
+- Em sequencia, modificadores valem ate o fim (ex.: `CTRL+K+J`)
+- Nao permitido: comando AutoHotkey arbitrario

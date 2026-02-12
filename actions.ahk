@@ -19,6 +19,10 @@ switch action {
     Send "{Enter}"
   case "play_pause":
     Send "{Media_Play_Pause}"
+  case "send_hotkey":
+    combo := A_Args.Length >= 2 ? A_Args[2] : ""
+    if combo != ""
+      SendEvent combo
   default:
     ; nada / desconhecido
 }

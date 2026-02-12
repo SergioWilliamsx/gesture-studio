@@ -1,0 +1,14 @@
+<svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gConnect" x1="24" y1="20" x2="138" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9C6CFF" />
+      <stop offset="1" stop-color="#7AF4D1" />
+    </linearGradient>
+  </defs>
+  <rect x="18" y="26" width="124" height="44" rx="22" stroke="url(#gConnect)" stroke-width="2.2" />
+  <circle cx="80" cy="48" r="14" stroke="url(#gConnect)" stroke-width="2.2" />
+  <circle cx="56" cy="48" r="3" fill="#9C6CFF" />
+  <circle cx="104" cy="48" r="3" fill="#7AF4D1" />
+  <path d="M42 89C45 80 52 76 62 76H98C108 76 115 80 118 89" stroke="url(#gConnect)" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M44 92H116" stroke="#7C90CF" stroke-opacity=".45" stroke-width="1.6" />
+</svg>

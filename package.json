@@ -1,6 +1,6 @@
 {
-  "name": "play-pause",
-  "version": "1.0.0",
+  "name": "gesture-studio",
+  "version": "2.0.0",
   "description": "Gesture Studio: cadastre gestos com a mão e dispare ações (volume, space, play/pause) via AutoHotkey.",
   "license": "MIT",
   "author": "Sérgio Williams",
@@ -19,7 +19,7 @@
   },
   "build": {
     "appId": "com.sergio.playpause",
-    "productName": "PlayPause",
+    "productName": "GestureStudio",
     "files": [
       "**/*"
     ],
@@ -36,7 +36,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "PlayPause"
+      "shortcutName": "Gesture Studio"
     }
   }
 }

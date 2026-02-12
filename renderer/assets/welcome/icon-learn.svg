@@ -1,0 +1,23 @@
+<svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gLearn" x1="26" y1="18" x2="138" y2="106" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B97BFF" />
+      <stop offset="1" stop-color="#7AF4D1" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M56 90C57 82 60 76 64 71C68 66 72 61 75 55C78 49 79 42 75 38C71 34 64 37 62 44C60 51 61 58 59 64C57 70 52 76 46 81"
+    stroke="url(#gLearn)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M74 74L88 60C93 55 101 55 106 60C111 65 111 73 106 78L90 94"
+    stroke="url(#gLearn)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path d="M116 35L121 31M119 44L126 44M112 47L115 53" stroke="#A98DFF" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

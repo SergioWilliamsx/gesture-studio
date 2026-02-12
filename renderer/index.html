@@ -1,112 +1,395 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Gesture Studio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <div class="wrap">
-      <header>
-        <div>
-          <h1>Gesture Studio</h1>
-          <p class="sub">
-            Capture gestos com a mão e associe a ações (volume, space, etc.).<br/>
-            Os gestos ficam salvos localmente. Faça o gesto sempre com ângulo parecido.
+    <div class="topbar"></div>
+
+    <main id="welcomeScreen" class="welcomeScreen hidden" aria-label="Boas-vindas">
+      <section class="welcomeHero">
+        <div class="welcomeHeroGlow"></div>
+        <div class="welcomeBrandIconWrap">
+          <img src="../icon.ico" alt="Gesture Studio" class="welcomeBrandIcon" />
+        </div>
+
+        <h1 class="welcomeTitle">Bem-vindo ao Gesture Studio</h1>
+        <p class="welcomeSubtitle">Controle seu desktop com gestos de mão em tempo real.</p>
+        <button id="welcomeGetStarted" class="welcomePrimaryBtn" type="button">Começar</button>
+
+        <div class="welcomeProgress" aria-hidden="true">
+          <div class="welcomeProgressLine"></div>
+          <span id="welcomeProgressDot1" class="welcomeProgressDot"></span>
+          <span id="welcomeProgressDot2" class="welcomeProgressDot"></span>
+          <span id="welcomeProgressDot3" class="welcomeProgressDot"></span>
+        </div>
+      </section>
+
+      <section id="welcomeSteps" class="welcomeSteps">
+        <article id="welcomeCardConnect" class="welcomeCard">
+          <p class="welcomeStepTitle">Passo 1. Conectar</p>
+          <h2 class="welcomeCardTitle">Conecte sua câmera</h2>
+          <img
+            class="welcomeStepIcon"
+            src="./assets/welcome/icon-connect.svg"
+            alt="Conectar câmera"
+          />
+          <p class="welcomeCardText">
+            Permita acesso à webcam para ativar o reconhecimento de gestos.
           </p>
-        </div>
-        <div class="badge">
-          <span id="dot" class="dot"></span>
-          <span id="camState">Câmera desligada</span>
-        </div>
-      </header>
 
-      <div class="grid">
-        <!-- Viewer -->
-        <div class="card">
-          <div class="cardHead">
-            <div class="title">Câmera</div>
-            <div class="badge">MediaPipe Hands • 1 mão</div>
-          </div>
+          <button id="welcomeGrantAccess" class="welcomeCardPrimaryBtn" type="button">
+            Conceder acesso
+          </button>
+          <button id="welcomeContinueNoCamera" class="welcomeCardGhostBtn" type="button">
+            Continuar sem câmera
+          </button>
+          <p id="welcomeConnectState" class="welcomeCardState">Pendente</p>
+        </article>
 
-          <div class="viewer">
-            <div>
-             <video id="video" autoplay playsinline muted></video>
-              <canvas id="canvas"></canvas>
+        <article id="welcomeCardLearn" class="welcomeCard">
+          <p class="welcomeStepTitle">Passo 2. Aprender gestos</p>
+          <h2 class="welcomeCardTitle">Aprenda os gestos</h2>
+          <img
+            class="welcomeStepIcon"
+            src="./assets/welcome/icon-learn.svg"
+            alt="Aprender gestos"
+          />
+          <p class="welcomeCardText">
+            Veja exemplos e prática de gestos para controlar seu sistema.
+          </p>
+
+          <button id="welcomeNext" class="welcomeCardPrimaryBtn" type="button">Próximo</button>
+          <button id="welcomeViewAllGestures" class="welcomeCardGhostBtn" type="button">
+            Ver todos os gestos
+          </button>
+          <p id="welcomeLearnState" class="welcomeCardState">Bloqueado até concluir o passo 1</p>
+        </article>
+
+        <article id="welcomeCardProfile" class="welcomeCard">
+          <p class="welcomeStepTitle">Passo 3. Criar perfil</p>
+          <h2 class="welcomeCardTitle">Crie seu primeiro perfil</h2>
+          <img
+            class="welcomeStepIcon"
+            src="./assets/welcome/icon-profile.svg"
+            alt="Criar perfil"
+          />
+          <p class="welcomeCardText">
+            Seu perfil guarda gestos, atalhos e ajustes personalizados.
+          </p>
+
+          <button id="welcomeCreateProfile" class="welcomeCardPrimaryBtn" type="button">
+            Criar perfil
+          </button>
+          <p id="welcomeProfileState" class="welcomeCardState">Bloqueado até concluir o passo 2</p>
+        </article>
+      </section>
+    </main>
+
+    <div id="appRoot" class="appRoot hidden">
+      <div class="wrap">
+        <div class="appShell">
+          <header class="appHeader">
+            <div class="headerLeft">
+              <button id="btnMenu" class="iconBtn" type="button" title="Abrir menu">&#9776;</button>
+              <h1>Gesture Studio</h1>
             </div>
 
-            <div class="controls">
-              <div class="leftControls">
-                <button id="btnStart" class="primary">Iniciar</button>
-                <button id="btnStop">Parar</button>
+            <div class="headerRight">
+              <div class="camBadge">
+                <span id="dot" class="dot"></span>
+                <span id="camState">Camera desligada</span>
               </div>
-              <div class="rightControls">
-                <span>FPS: <b id="fps">0</b></span>
-                <span>•</span>
-                <span>Mão: <b id="handSeen">não</b></span>
+              <button id="btnMore" class="iconBtn hidden" type="button" aria-hidden="true">...</button>
+            </div>
+          </header>
+
+          <div class="grid">
+            <section class="card">
+              <div class="cardHead">
+                <div class="title">Deteccao</div>
+                <div class="badge">MediaPipe Hands</div>
               </div>
-            </div>
 
-            <div class="toast" id="status">Parado.</div>
-          </div>
-        </div>
+              <div class="viewer">
+                <div class="preview">
+                  <video id="video" autoplay playsinline muted></video>
+                  <canvas id="canvas"></canvas>
+                </div>
 
-        <!-- Gestures -->
-        <div class="card">
-          <div class="cardHead">
-            <div class="title">Gestos cadastrados</div>
-            <div class="badge">Template matching</div>
-          </div>
+                <div class="controls">
+                  <div class="leftControls">
+                    <button id="btnStart" class="primary">Iniciar</button>
+                    <button id="btnStop">Parar</button>
+                  </div>
+                  <div class="rightControls">
+                    <span>FPS: <b id="fps">0</b></span>
+                    <span class="sep">&bull;</span>
+                    <span>Mao: <b id="handSeen">nao</b></span>
+                  </div>
+                </div>
 
-          <div class="panel">
-            <div class="kpis">
-              <div class="kpi">
-                <div class="label">Dedos (estimativa)</div>
-                <div class="value"><span id="count">0</span></div>
+                <div class="toast" id="status">Parado.</div>
               </div>
-              <div class="kpi">
-                <div class="label">Gestos salvos</div>
-                <div class="value"><span id="savedCount">0</span></div>
+            </section>
+
+            <section class="card">
+              <div class="cardHead">
+                <div class="title">Gestos</div>
               </div>
-            </div>
 
-            <p class="hint">
-              1) Faça um gesto • 2) Dê um nome • 3) Escolha a ação • 4) Capturar.<br/>
-              Quando o gesto bater, o app executa a ação via AutoHotkey.
-            </p>
+              <div class="panel">
+                <div class="profileInline">
+                  <span>Perfil ativo:</span>
+                  <b id="activeProfileText">Sem perfil</b>
+                  <button id="btnSwitchProfile" class="tinyAction" type="button" title="Trocar perfil">...</button>
+                </div>
 
-            <div class="formRow">
-              <input id="gestureName" placeholder="Nome do gesto (ex: ok, paz, joinha)" />
-              <select id="gestureAction"></select>
-              <button id="btnCapture" class="primary">Capturar</button>
-            </div>
+                <div class="quickProfileActions">
+                  <button id="btnCreateProfile" type="button">Novo perfil</button>
+                  <button id="btnDuplicateProfile" type="button">Duplicar perfil</button>
+                </div>
 
-            <div class="divider"></div>
+                <div class="sectionBlock">
+                  <h2>Criar gesto</h2>
+                  <p class="hint">
+                    1) Faca um gesto - 2) De um nome - 3) Escolha a acao - 4) Capturar.<br />
+                    Quando o gesto bater, o app executa a acao via AutoHotkey.
+                  </p>
 
-            <div class="small">
-              Sensibilidade (threshold): <b id="thrLabel">0.080</b> •
-              Cooldown por gesto: <b id="coolLabel">1200ms</b>
-              <br/>Se estiver difícil reconhecer, aumente. Se confundir, diminua.
-            </div>
+                  <div class="formRow">
+                    <input id="gestureName" placeholder="Nome do gesto..." />
+                    <button id="btnCapture" class="primary">Capturar</button>
+                  </div>
+                  <div class="formRow formRowAction">
+                    <select id="gestureAction" class="gestureActionSelect"></select>
+                    <button id="btnNewHotkeyAction" type="button">Novo atalho...</button>
+                  </div>
+                </div>
 
-            <div class="formRow">
-              <input id="threshold" type="range" min="0.040" max="0.140" step="0.002" value="0.080"/>
-              <button id="btnClearAll" class="danger">Apagar tudo</button>
-            </div>
+                <div class="sectionBlock">
+                  <h2>Gestos cadastrados</h2>
+                  <div class="kpis">
+                    <div class="kpi">
+                      <div class="label">Dedos (estimativa)</div>
+                      <div class="value"><span id="count">0</span></div>
+                    </div>
+                    <div class="kpi">
+                      <div class="label">Gestos do perfil</div>
+                      <div class="value"><span id="savedCount">0</span></div>
+                    </div>
+                  </div>
+                  <div class="list" id="gestureList"></div>
+                </div>
 
-            <div class="list" id="gestureList"></div>
+                <div class="sectionBlock advanced">
+                  <h2>Ajustes avancados</h2>
+                  <div class="sliderLine">
+                    Sensibilidade (threshold): <b id="thrLabel">0.080</b>
+                  </div>
+                  <input id="threshold" type="range" min="0.040" max="0.140" step="0.002" value="0.080" />
+
+                  <div class="sliderLine">
+                    Cooldown por gesto: <b id="coolLabel">1200ms</b>
+                  </div>
+                  <input id="cooldown" type="range" min="200" max="3000" step="50" value="1200" />
+
+                  <div class="formRow utilityActions">
+                    <button id="btnImport" type="button">Importar</button>
+                    <button id="btnExport" type="button">Exportar</button>
+                    <button id="btnClearAll" class="danger" type="button">Limpar gestos</button>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
+
+      <div id="menuBackdrop" class="overlay hidden"></div>
+
+      <aside id="menuPanel" class="sideMenu" role="menu" aria-label="Menu principal">
+        <div class="menuTitle">Gesture Studio</div>
+
+        <button id="menuSwitchProfile" class="menuItem" type="button">Trocar perfil...</button>
+        <button id="menuCreateProfile" class="menuItem" type="button">Criar novo perfil</button>
+        <button id="menuDuplicateProfile" class="menuItem" type="button">Duplicar perfil</button>
+        <button id="menuPauseDetection" class="menuItem" type="button">Pausar deteccao</button>
+
+        <div class="menuDivider"></div>
+
+        <button id="menuOpenDebug" class="menuItem" type="button">Abrir Debug</button>
+        <button id="menuImport" class="menuItem" type="button">Importar gestos...</button>
+        <button id="menuExport" class="menuItem" type="button">Exportar gestos...</button>
+        <button id="menuManageHotkeys" class="menuItem" type="button">Gerenciar atalhos...</button>
+        <button id="menuReset" class="menuItem" type="button">Resetar configuracoes...</button>
+
+        <label class="menuToggleRow" for="menuStartupToggle">
+          <span>Iniciar com Windows</span>
+          <input id="menuStartupToggle" type="checkbox" />
+        </label>
+
+        <div class="menuDivider"></div>
+
+        <button id="menuQuit" class="menuItem danger" type="button">Sair</button>
+      </aside>
     </div>
 
-    <!-- MediaPipe via CDN -->
+    <div id="modalBackdrop" class="modalBackdrop hidden" aria-hidden="true">
+      <section id="profileEditorModal" class="modalCard hidden" aria-labelledby="profileEditorTitle">
+        <div class="modalHead">
+          <h3 id="profileEditorTitle">Criar novo perfil</h3>
+          <button id="profileEditorClose" class="modalClose" type="button">&times;</button>
+        </div>
+
+        <label class="fieldLabel" for="profileEditorName">Nome do perfil</label>
+        <input id="profileEditorName" type="text" placeholder="Trabalho" autocomplete="off" />
+
+        <div class="fieldLabel">Icone (opcional)</div>
+        <div class="iconGrid" id="profileIconGrid">
+          <button class="iconChoice" data-icon="&#127918;" type="button">&#127918;</button>
+          <button class="iconChoice" data-icon="&#127925;" type="button">&#127925;</button>
+          <button class="iconChoice" data-icon="&#128187;" type="button">&#128187;</button>
+          <button class="iconChoice" data-icon="&#127916;" type="button">&#127916;</button>
+          <button class="iconChoice" data-icon="&#11088;" type="button">&#11088;</button>
+          <button class="iconChoice" data-icon="&#128221;" type="button">&#128221;</button>
+        </div>
+
+        <p class="modalHint">Cada perfil tem seus proprios gestos e acoes.</p>
+
+        <div class="modalActions">
+          <button id="profileEditorSubmit" class="primary" type="button">Criar</button>
+          <button id="profileEditorCancel" type="button">Cancelar</button>
+        </div>
+      </section>
+
+      <section id="profileSwitchModal" class="modalCard hidden" aria-labelledby="profileSwitchTitle">
+        <div class="modalHead">
+          <h3 id="profileSwitchTitle">Trocar perfil</h3>
+          <button id="profileSwitchClose" class="modalClose" type="button">&times;</button>
+        </div>
+
+        <div id="profileSwitchList" class="profileSwitchList"></div>
+
+        <div class="modalDivider"></div>
+
+        <button id="profileSwitchCreate" class="modalInlineAction" type="button">Criar novo perfil</button>
+        <button id="profileSwitchDuplicate" class="modalInlineAction" type="button">Duplicar perfil...</button>
+
+        <div class="modalActions">
+          <button id="profileSwitchConfirm" class="primary" type="button">Confirmar</button>
+          <button id="profileSwitchCancel" type="button">Cancelar</button>
+        </div>
+      </section>
+
+      <section id="welcomeTutorialModal" class="modalCard hidden" aria-labelledby="welcomeTutorialTitle">
+        <div class="modalHead">
+          <h3 id="welcomeTutorialTitle">Gestos básicos</h3>
+          <button id="welcomeTutorialClose" class="modalClose" type="button">&times;</button>
+        </div>
+
+        <p class="modalHint">Use estes exemplos como ponto de partida para criar seus próprios atalhos.</p>
+        <ul class="welcomeTutorialList">
+          <li><b>Palma aberta:</b> confirmar ou avançar.</li>
+          <li><b>Punho fechado:</b> play/pause.</li>
+          <li><b>Pinça:</b> selecionar item atual.</li>
+          <li><b>Dois dedos:</b> próximo conteúdo.</li>
+          <li><b>Joinha:</b> ação personalizada de aprovação.</li>
+          <li><b>Mão lateral:</b> voltar ou cancelar.</li>
+        </ul>
+
+        <div class="modalActions">
+          <button id="welcomeTutorialDone" class="primary" type="button">Entendi</button>
+        </div>
+      </section>
+
+      <section id="hotkeyManagerModal" class="modalCard hidden" aria-labelledby="hotkeyManagerTitle">
+        <div class="modalHead">
+          <h3 id="hotkeyManagerTitle">Atalhos salvos</h3>
+          <button id="hotkeyManagerClose" class="modalClose" type="button">&times;</button>
+        </div>
+
+        <p class="modalHint">Apague atalhos que nao usa mais. Gestos vinculados ficarao invalidos ate escolher outra acao.</p>
+        <div id="hotkeyManagerList" class="hotkeyManagerList"></div>
+
+        <div class="modalActions">
+          <button id="hotkeyManagerDone" class="primary" type="button">Fechar</button>
+        </div>
+      </section>
+
+      <section id="hotkeyEditorModal" class="modalCard hidden" aria-labelledby="hotkeyEditorTitle">
+        <div class="modalHead">
+          <h3 id="hotkeyEditorTitle">Novo atalho</h3>
+          <button id="hotkeyEditorClose" class="modalClose" type="button">&times;</button>
+        </div>
+
+        <label class="fieldLabel" for="hotkeyEditorName">Nome da acao</label>
+        <input id="hotkeyEditorName" type="text" placeholder="Alternar janela" autocomplete="off" />
+
+        <div class="fieldLabel">Atalho gravado</div>
+        <div class="hotkeyCaptureRow">
+          <input
+            id="hotkeyEditorCombo"
+            type="text"
+            class="hotkeyComboInput"
+            placeholder="Use Gravar ou monte a sequencia abaixo"
+            readonly
+          />
+          <button id="hotkeyEditorRecord" type="button">Gravar</button>
+        </div>
+
+        <div class="fieldLabel">Montar sequencia por partes</div>
+        <div class="hotkeyBuilderRow">
+          <input
+            id="hotkeyEditorPartInput"
+            type="text"
+            placeholder="Digite uma tecla/modificador (ex.: Ctrl, K, Tab)"
+            autocomplete="off"
+          />
+          <button
+            id="hotkeyEditorPartAdd"
+            class="hotkeyPartAddBtn"
+            type="button"
+            aria-label="Adicionar parte"
+          >
+            +
+          </button>
+        </div>
+        <div id="hotkeyEditorPartChips" class="hotkeyPartChips" aria-live="polite"></div>
+        <button id="hotkeyEditorPartClear" class="hotkeyInlineBtn" type="button">Limpar sequencia</button>
+
+        <div class="fieldLabel">Presets rapidos</div>
+        <div id="hotkeyPresetGrid" class="hotkeyPresetGrid">
+          <button class="hotkeyPresetBtn" data-combo="ALT+TAB" type="button">Alt+Tab</button>
+          <button class="hotkeyPresetBtn" data-combo="WIN+D" type="button">Win+D</button>
+          <button class="hotkeyPresetBtn" data-combo="CTRL+C" type="button">Ctrl+C</button>
+          <button class="hotkeyPresetBtn" data-combo="CTRL+V" type="button">Ctrl+V</button>
+          <button class="hotkeyPresetBtn" data-combo="MEDIA_PLAY_PAUSE" type="button">Play/Pause</button>
+          <button class="hotkeyPresetBtn" data-combo="VOLUME_MUTE" type="button">Mute</button>
+        </div>
+
+        <label class="fieldLabel" for="hotkeyEditorFireMode">Modo de disparo</label>
+        <select id="hotkeyEditorFireMode">
+          <option value="once">Unico (dispara uma vez)</option>
+          <option value="repeat">Repetir enquanto gesto ativo</option>
+        </select>
+
+        <p class="modalHint">Aceita tecla simples (ex.: K), combinacao (Ctrl+K) ou sequencia (Ctrl+K+J). Teclas de midia valem apenas como item unico.</p>
+
+        <div class="modalActions">
+          <button id="hotkeyEditorSubmit" class="primary" type="button">Salvar</button>
+          <button id="hotkeyEditorCancel" type="button">Cancelar</button>
+        </div>
+      </section>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-
     <script src="./app.js"></script>
   </body>
 </html>
